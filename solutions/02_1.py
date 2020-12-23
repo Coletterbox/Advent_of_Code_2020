@@ -1,6 +1,10 @@
 # Each line gives the password policy and then the password. The password policy indicates the lowest and highest number of times a given letter must appear for the password to be valid. For example, 1-3 a means that the password must contain a at least 1 time and at most 3 times.
 # How many passwords are valid according to their policies?
 
+# Part 2
+# Each policy actually describes two positions in the password, where 1 means the first character, 2 means the second character, and so on. (Be careful; Toboggan Corporate Policies have no concept of "index zero"!) Exactly one of these positions must contain the given letter. Other occurrences of the letter are irrelevant for the purposes of policy enforcement.
+
+
 problemInput = ["2-5 z: zzztvz",
 "2-8 d: pddzddkdvqgxndd",
 "4-14 r: rrrjrrrrrrbrrccrr",
@@ -1014,21 +1018,39 @@ def ParsePasswordAndPolicy(line: str):
         "min": minNum, 
         "max": maxNum}
 
-def VerifyPassword(passworddata):
+def VerifyPasswordSecondPolicy(passworddata):
+    parsedData = ParsePasswordAndPolicy(passworddata)
+    pword = parsedData["password"]
+
+    firstIndex = pword[parsedData["min"] - 1] == parsedData["character"]
+    secondIndex = pword[parsedData["max"] - 1] == parsedData["character"]
+
+    return firstIndex != secondIndex
+
+def VerifyPasswordFirstPolicy(passworddata):
     parsedData = ParsePasswordAndPolicy(passworddata)
     characterCount = 0
 
     for character in parsedData["password"]:
         if (character == parsedData["character"]):
             characterCount += 1
-
+            
     return(characterCount >= parsedData["min"] and characterCount <= parsedData["max"])
 
-def CheckPasswords(input):
+
+def CheckPasswordsPartTwo(input):
     validPasswords = 0
     for line in input:
-        if (VerifyPassword(line)):
+        if (VerifyPasswordFirstPolicy(line)):
             validPasswords += 1
     return validPasswords
 
-print(CheckPasswords(problemInput))
+def CheckPasswordsPartOne(input):
+    validPasswords = 0
+    for line in input:
+        if (VerifyPasswordSecondPolicy(line)):
+            validPasswords += 1
+    return validPasswords
+
+print(CheckPasswordsPartOne(problemInput))
+print(CheckPasswordsPartTwo(problemInput))
