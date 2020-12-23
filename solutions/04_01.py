@@ -24,6 +24,7 @@
     # cid (Country ID) - ignored, missing or not.
 
 import os
+import re
 
 def IsValidEyeColour(string):
     validCols = {"amb", "blu", "brn", "gry", "grn", "hzl", "oth"}
@@ -31,6 +32,7 @@ def IsValidEyeColour(string):
 
 def IsValidHex(code):
 
+    code = code.lower()
     charSet = {'0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f'}
 
     if len(code) != 7:
@@ -110,22 +112,30 @@ def ParseDataField(field):
     return field.split(':')
 
 def ValidatePassport(passportdata, requiredfields):
+    
+    foundFields = requiredfields.copy()
     for field in passportdata:
         parsedField = ParseDataField(field)
         if parsedField[0] in requiredfields:
             if not ValidateDataField(parsedField[0], parsedField[1]):
                 return False
+            foundFields.remove(parsedField[0])
+    
+    if len(foundFields) > 0:
+        return False
     return True
 
 def ParsePassportData(filename: str):
     dataFile = open(filename, "r")
     fileAsString = ""
     for line in dataFile:
-        fileAsString += line
+        fileAsString += line.lower()
     
     passportStrings = fileAsString.split("\n\n")
-    
-    for passport in passportData
+
+    passportData = []
+    for passport in passportStrings:
+        passportData.append(re.split('\n| ',passport))
 
     return passportData
 
