@@ -58,7 +58,7 @@ def ParseInput(filename):
     return output
 
 def main():
-    os.chdir(os.getcwd())
+    os.chdir(os.getcwd() + '\\solutions\\')
     numList = ParseInput("09_input.txt")
     
     # Part One 
